@@ -1,4 +1,6 @@
 {
+    "NOTE": "All the application port range should be in the range 8080-8989 only",
+
     "PRIVILEGEPASS_BACKEND": "8080",
     "PRIVILEGEPASS_UI": "8081",
 
