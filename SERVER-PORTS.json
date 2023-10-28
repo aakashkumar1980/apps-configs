@@ -1,9 +1,10 @@
-{
+[
+  {
     "NOTE": "All the application port range should be in the range 8080-8989 only",
-
-    "PRIVILEGEPASS_BACKEND": "8080",
-    "PRIVILEGEPASS_UI": "8081",
-
-    "ACTIVE_DIRECTORY2UI_APPLICATION_AUTHENTICATION_BACKEND": "8082",
-    "ACTIVE_DIRECTORY2UI_APPLICATION_UI1": "8083"
-}
+    
+    "PRIVILEGEPASS_APPLICATION": {
+      "BACKEND_SERVER_PORT": 8080,
+      "UI_APP_PORT": 8081
+    }
+  }
+]
