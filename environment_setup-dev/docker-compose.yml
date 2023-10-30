@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: apple@26j
+      MYSQL_DATABASE: privatelearningv2
+      MYSQL_USER: aakash.kumar
+      MYSQL_PASSWORD: apple26j
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  vault:
+    image: vault:1.13.3
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: vaulttoken
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:9200"
+    ports:
+      - "9200:9200"
+    volumes:
+      - vault-data:/vault/file
+
+volumes:
+  mysql-data:
+  vault-data:
