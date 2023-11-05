@@ -1,17 +1,5 @@
 #!/bin/sh
 
-echo "CLEANING UP..."
-# clean up
-docker stop $(docker ps -aq)
-docker rm $(docker ps -aq)
-docker-compose down
-
-#docker rmi $(docker images -q) -f
-docker volume rm $(docker volume ls -q)
-#docker network rm $(docker network ls | grep "bridge\|none\|host" -v | awk '{print $1}')
-docker system prune -a -f
-
-
 echo "SETUP STARTING..."
 # STEP 1: Start the docker containers
 docker-compose up -d
