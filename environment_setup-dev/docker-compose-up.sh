@@ -52,9 +52,7 @@ vault write -f auth/approle/role/privatelearningv2-role/secret-id
 vault kv put secret/springboot_template \
     spring.datasource.database=privatelearningv2 \
     spring.datasource.username=aakash.kumar \
-    spring.datasource.password=apple26j \
-    spring.security.oauth2.resourceserver.jwt.issuer-uri=https://dev-q4sy1yot76nvjjq1.us.auth0.com/ \
-    spring.security.oauth2.resourceserver.jwt.audience=albums-identifier
+    spring.datasource.password=apple26j
 
 
 echo "SETUP COMPLETED!"
