@@ -41,9 +41,14 @@ vault auth enable approle
 vault write auth/approle/role/privatelearningv2-role token_policies="privatelearningv2-policy"
 
 # FETCH: ROLE & SECRET
-vault read auth/approle/role/privatelearningv2-role/role-id
-vault write -f auth/approle/role/privatelearningv2-role/secret-id
-
+ROLE_ID=$(vault read auth/approle/role/privatelearningv2-role/role-id)
+ROLE_ID_VALUE=$(echo $ROLE_ID | awk '/role_id/ {print $6}')
+echo "ROLE_ID=$ROLE_ID"
+SECRET_ID=$(vault write -f auth/approle/role/privatelearningv2-role/secret-id)
+SECRET_ID_VALUE=$(echo $SECRET_ID | grep "secret_id " | awk '{print $6}')
+echo "SECRET_ID=$SECRET_ID"
+sed -i "s/^VAULT_ROLE_ID=.*/VAULT_ROLE_ID=$ROLE_ID_VALUE/" "../../oauth2-resource-server-webstorage/.env" 
+sed -i "s/^VAULT_SECRET_ID=.*/VAULT_SECRET_ID=$SECRET_ID_VALUE/" "../../oauth2-resource-server-webstorage/.env" 
 
 
 # ##################### #
