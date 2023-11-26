@@ -26,12 +26,30 @@ fi
 echo 'path "secret/data/application" {
     capabilities = ["read"]
 }
+path "secret/metadata/" {
+    capabilities = ["list"]
+}
+
 path "secret/data/springboot_template" {
     capabilities = ["read"]
 }
-path "secret/metadata/" {
-    capabilities = ["list"]
-}' | vault policy write privatelearningv2-policy -
+path "secret/data/springboot_template/common" {
+    capabilities = ["read"]
+}
+path "secret/data/springboot_template/common/auth0" {
+    capabilities = ["read"]
+}
+path "secret/data/springboot_template/common/cognito" {
+    capabilities = ["read"]
+}
+path "secret/data/springboot_template/auth0" {
+    capabilities = ["read"]
+}
+path "secret/data/springboot_template/cognito" {
+    capabilities = ["read"]
+}
+' | vault policy write privatelearningv2-policy -
+
 
 # ROLE:
 # Enable AppRole
@@ -54,10 +72,18 @@ sed -i "s/^VAULT_SECRET_ID=.*/VAULT_SECRET_ID=$SECRET_ID_VALUE/" "../../oauth2-r
 # ##################### #
 # STORE THE CREDENTIALS #
 # ##################### #
-vault kv put secret/springboot_template \
+vault kv put secret/springboot_template/common \
     spring.datasource.database=privatelearningv2 \
     spring.datasource.username=aakash.kumar \
     spring.datasource.password=apple26j
+
+vault kv put secret/springboot_template/auth0 \
+    spring.security.oauth2.resourceserver.jwt.issuer-uri=https://dev-3atdqio6bouv8swb.us.auth0.com/ \
+    spring.security.oauth2.resourceserver.jwt.audience=albums-identifier
+
+vault kv put secret/springboot_template/cognito \
+    spring.security.oauth2.resourceserver.jwt.issuer-uri=https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_9oQRKbQXQ \
+    spring.security.oauth2.resourceserver.jwt.audience=albums-identifier
 
 
 echo "SETUP COMPLETED!"
