@@ -39,10 +39,16 @@ path "secret/data/springboot_template/common" {
 path "secret/data/springboot_template/common/auth0" {
     capabilities = ["read"]
 }
+path "secret/data/springboot_template/common/auth0_enterprise" {
+    capabilities = ["read"]
+}
 path "secret/data/springboot_template/common/cognito" {
     capabilities = ["read"]
 }
 path "secret/data/springboot_template/auth0" {
+    capabilities = ["read"]
+}
+path "secret/data/springboot_template/auth0_enterprise" {
     capabilities = ["read"]
 }
 path "secret/data/springboot_template/cognito" {
@@ -79,6 +85,9 @@ vault kv put secret/springboot_template/common \
 
 vault kv put secret/springboot_template/auth0 \
     spring.security.oauth2.resourceserver.jwt.issuer-uri=https://dev-3atdqio6bouv8swb.us.auth0.com/ \
+    spring.security.oauth2.resourceserver.jwt.audience=albums-identifier
+vault kv put secret/springboot_template/auth0_enterprise \
+    spring.security.oauth2.resourceserver.jwt.issuer-uri=https://dev-8r5puiwt4gcv3eps.us.auth0.com/ \
     spring.security.oauth2.resourceserver.jwt.audience=albums-identifier
 
 vault kv put secret/springboot_template/cognito \
