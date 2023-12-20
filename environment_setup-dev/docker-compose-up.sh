@@ -9,6 +9,9 @@ export VAULT_ADDR='http://localhost:9200'
 sleep 30
 
 
+# ##### #
+# VALUT #
+# ##### #
 # Login to Vault
 vault login vaulttoken
 
@@ -75,9 +78,7 @@ sed -i "s/^VAULT_ROLE_ID=.*/VAULT_ROLE_ID=$ROLE_ID_VALUE/" "../../oauth2-resourc
 sed -i "s/^VAULT_SECRET_ID=.*/VAULT_SECRET_ID=$SECRET_ID_VALUE/" "../../oauth2-resource-server-webstorage/.env" 
 
 
-# ##################### #
 # STORE THE CREDENTIALS #
-# ##################### #
 vault kv put secret/springboot_template/common \
     spring.datasource.database=privatelearningv2 \
     spring.datasource.username=aakash.kumar \
@@ -93,6 +94,24 @@ vault kv put secret/springboot_template/auth0_enterprise \
 vault kv put secret/springboot_template/cognito \
     spring.security.oauth2.resourceserver.jwt.issuer-uri=https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_9oQRKbQXQ \
     spring.security.oauth2.resourceserver.jwt.audience=albums-identifier
+
+
+
+# ############### #
+# SAMPLE REST API #
+# ############### #
+# REF: https://dev.to/millankaul/run-restful-apis-service-using-docker-b68
+IMAGE_NAME=sample-rest-api-docker:latest
+PORT=$(jq '.[0].APPS_TEMPLATES.BACKEND_SAMPLE_REST_API_TODO' ../SERVER-PORTS.json)
+if docker image inspect ${IMAGE_NAME} >/dev/null 2>&1; then
+  echo "Docker image exists. starting the server..."
+  docker run -p ${PORT}:8080 -d ${IMAGE_NAME}
+else
+  echo "Docker image does not exist. Creating docker image and starting the server..."
+  cd sample-rest-api-docker
+  docker build . -t ${IMAGE_NAME}
+  docker run -p ${PORT}:8080 -d ${IMAGE_NAME}
+fi
 
 
 echo "SETUP COMPLETED!"
