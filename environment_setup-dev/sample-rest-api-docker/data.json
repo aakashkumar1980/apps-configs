@@ -1,0 +1,28 @@
+{
+  "todos": [
+      {
+          "id": "1703121571466",
+          "title": "Coding in Javascript",
+          "description": "Working with functions in JavaScript",
+          "completed": false
+      },
+      {
+          "id": "1703821371484",
+          "title": "Cooking Supper",
+          "description": "Preparing rice and chicken",
+          "completed": false
+      },
+      {
+          "id": "1703122571835",
+          "title": "Taking a walk",
+          "description": "Easy time at the park",
+          "completed": false
+      },
+      {
+          "id": "1711121514236",
+          "title": "Watching Netflix",
+          "description": "Enjoying the new premiered series",
+          "completed": false
+      }
+  ]
+}

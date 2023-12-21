@@ -1,149 +1,121 @@
-//app.js
-const http = require("http");
-const Todo = require("./controller");
-const { getReqData } = require("./utils");
+const http = require('http');
+const db = require('./db');
+const { getReqData } = require('./utils');
 
 const PORT = process.env.PORT || 8080;
-const HOST = "localhost";
+const HOST = 'localhost';
 
 function setCorsHeaders(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow any origin
-  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Allow any origin
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
 const server = http.createServer(async (req, res) => {
-    console.log("Called" + req.method + " : " + req.url);
+    console.log('Called ' + req.method + ' : ' + req.url);
 
     // CORS
     setCorsHeaders(res);
     if (req.method === 'OPTIONS') {
-      res.writeHead(204);
-      res.end();
-      return;
+        res.writeHead(204);
+        res.end();
+        return;
     }
 
-    if (req.url === "/" && req.method === "GET") {
-        // set the status code, and content-type
-        res.writeHead(200, { "Content-Type": "application/json" });
-        // send the data
-        res.end("Welcome, this is your Home page\n");
+    // Base URL
+    if (req.url === '/' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end('Welcome, this is your Home page\n');
     }
 
-    //Health check and uptime endpoint
-    else if (req.url === "/health" && req.method === "GET") {
-        // console.log("Called GET : 0.0.0.0:8080/health");
+    // Health check and uptime endpoint
+    else if (req.url === '/health' && req.method === 'GET') {
         const healthcheck = {
             uptime: process.uptime(),
-            message: "OK",
+            message: 'OK',
             timestamp: Date.now(),
         };
+        res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(healthcheck));
     }
 
-    // /api/todos : GET
-    else if (req.url === "/api/todos" && req.method === "GET") {
-        // console.log("Called GET : 0.0.0.0:8080/api/todos");
-        // get the todos.
-        const todos = await new Todo().getTodos();
-        // set the status code, and content-type
-        res.writeHead(200, { "Content-Type": "application/json" });
-        // send the data
+    // GET all todos
+    else if (req.url === '/api/todos' && req.method === 'GET') {
+        const todos = db.get('todos').value();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(todos));
     }
 
-    // /api/todos/:id : GET
-    else if (req.url.match(/\/api\/todos\/([0-9]+)/) && req.method === "GET") {
-        // console.log("Called GET : 0.0.0.0:8080/api/todos/{id}");
+    // GET a single todo by id
+    else if (req.url.match(/\/api\/todos\/([0-9]+)/) && req.method === 'GET') {
         try {
-            // get id from url
-            const id = req.url.split("/")[3];
-            // get todo
-            const todo = await new Todo().getTodo(id);
-            // set the status code and content-type
-            res.writeHead(200, { "Content-Type": "application/json" });
-            // send the data
+            const id = req.url.split('/')[3];
+            const todo = db.get('todos').find({ id }).value();
+            if (!todo) {
+                throw new Error('Todo not found');
+            }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(todo));
         } catch (error) {
-            // set the status code and content-type
-            res.writeHead(404, { "Content-Type": "application/json" });
-            // send the error
-            res.end(JSON.stringify({ message: error }));
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: error.toString() }));
         }
     }
 
-    // /api/todos/:id : DELETE
-    else if (
-        req.url.match(/\/api\/todos\/([0-9]+)/) &&
-        req.method === "DELETE"
-    ) {
-        // console.log("Called DELETE : 0.0.0.0:8080/api/todos/{id}");
-        try {
-            // get the id from url
-            const id = req.url.split("/")[3];
-            // delete todo
-            let message = await new Todo().deleteTodo(id);
-            // set the status code and content-type
-            res.writeHead(200, { "Content-Type": "application/json" });
-            // send the message
-            res.end(JSON.stringify({ message }));
-            //or response status = 204 if no response body is sent
-               // res.writeHead(204, { "Content-Type": "application/json" }); 
-
-        } catch (error) {
-            // set the status code and content-type
-            res.writeHead(404, { "Content-Type": "application/json" });
-            // send the error
-            res.end(JSON.stringify({ message: error }));
-        }
-    }
-
-    // /api/todos/:id : UPDATE
-    else if (
-        req.url.match(/\/api\/todos\/([0-9]+)/) &&
-        req.method === "PATCH"
-    ) {
-        // console.log("Called PATCH : 0.0.0.0:8080/api/todos/{id}");
-        try {
-            // get the id from the url
-            const id = req.url.split("/")[3];
-            // update todo
-            let updated_todo = await new Todo().updateTodo(id);
-            // set the status code and content-type
-            res.writeHead(200, { "Content-Type": "application/json" });
-            // send the message
-            res.end(JSON.stringify(updated_todo));
-        } catch (error) {
-            // set the status code and content type
-            res.writeHead(404, { "Content-Type": "application/json" });
-            // send the error
-            res.end(JSON.stringify({ message: error }));
-        }
-    }
-
-    // /api/todos/ : POST
-    else if (req.url === "/api/todos" && req.method === "POST") {
-        // console.log("Called POST : 0.0.0.0:8080/api/todos");
-        // get the data sent along
+    // POST a new todo
+    else if (req.url === '/api/todos' && req.method === 'POST') {
         let todo_data = await getReqData(req);
-        // create the todo
-        let todo = await new Todo().createTodo(JSON.parse(todo_data));
-        // set the status code and content-type
-        res.writeHead(201, { "Content-Type": "application/json" }); //was 200
-        //send the todo
-        res.end(JSON.stringify(todo));
+        let newTodo = JSON.parse(todo_data);
+        newTodo.id = Date.now().toString();
+        db.get('todos').push(newTodo).write();
+        res.writeHead(201, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(newTodo));
+    }
+
+    // DELETE a todo
+    else if (req.url.match(/\/api\/todos\/([0-9]+)/) && req.method === 'DELETE') {
+        try {
+            const id = req.url.split('/')[3];
+            const todo = db.get('todos').find({ id }).value();
+            if (!todo) {
+                throw new Error('Todo not found');
+            }
+            db.get('todos').remove({ id }).write();
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'Todo deleted' }));
+        } catch (error) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: error.toString() }));
+        }
+    }
+
+    // PATCH/UPDATE a todo
+    else if (req.url.match(/\/api\/todos\/([0-9]+)/) && req.method === 'PATCH') {
+        try {
+            const id = req.url.split('/')[3];
+            let todo_data = await getReqData(req);
+            let updatedData = JSON.parse(todo_data);
+            const todo = db.get('todos').find({ id }).value();
+            if (!todo) {
+                throw new Error('Todo not found');
+            }
+            db.get('todos').find({ id }).assign(updatedData).write();
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'Todo updated' }));
+        } catch (error) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: error.toString() }));
+        }
     }
 
     // No route present
     else {
-        console.warn(
-            "This endpoint is not implemented / unavailable at the moment !!"
-        );
-        res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ message: "Route not found" }));
+        console.warn('This endpoint is not implemented / unavailable at the moment !!');
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'Route not found' }));
     }
 });
 
 server.listen(PORT, () => {
-     console.log(`server started on ${HOST}  port: ${PORT}`);
+    console.log(`Server started on ${HOST} port: ${PORT}`);
 });

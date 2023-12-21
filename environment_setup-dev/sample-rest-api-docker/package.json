@@ -20,6 +20,9 @@
     "8080"
   ],
   "author": "Millan Kaul (eaccmk)",
-  "homepage":"https://github.com/eaccmk/node-app-http-docker#readme",
-  "license": "ISC"
+  "homepage": "https://github.com/eaccmk/node-app-http-docker#readme",
+  "license": "ISC",
+  "dependencies": {
+    "lowdb": "^1.0.0"
+  }
 }

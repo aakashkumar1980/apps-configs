@@ -3,8 +3,6 @@
 echo "SETUP STARTING..."
 # Start the docker containers
 docker-compose up -d
-# Set Vault Address
-export VAULT_ADDR='http://localhost:9200'
 # Give containers some time to fully start
 sleep 30
 
@@ -12,6 +10,9 @@ sleep 30
 # ##### #
 # VALUT #
 # ##### #
+# Set Vault Address
+export VAULT_ADDR='http://localhost:9200'
+
 # Login to Vault
 vault login vaulttoken
 
