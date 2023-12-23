@@ -1,3 +1,4 @@
+import os
 import time
 from datetime import datetime, timedelta
 from config_loader import load_config  # Importing the load_config function
@@ -9,13 +10,19 @@ class SessionTracker:
         self.session_start = None
         self.session_end = None
 
-    def start_session(self, test_start_time=None):
+    def start_session(self):
         """
-        Start a new session. Optionally, a test start time can be provided.
-        :param test_start_time: datetime object for when the session should start (for testing).
+        Start a new session based on the current system time.
         """
-        self.session_start = test_start_time if test_start_time else datetime.now()
+        now = datetime.now()
+        print(f"Current time: {now}")
+        if not self.is_within_allowed_time(now):
+            next_start_time = self.calculate_next_start_time(now)
+            self.notify_next_start_time(next_start_time)
+            return False
+        self.session_start = now
         self.calculate_session_end()
+        return True
 
     def calculate_session_end(self):
         """
@@ -24,12 +31,15 @@ class SessionTracker:
         max_duration_hours = float(self.config["session"]["max_duration"])
         self.session_end = self.session_start + timedelta(hours=max_duration_hours)
 
-    def check_session_end(self):
+    # Updated Method: check_session_end with file logging
+    def check_session_end(self, log_file):
         """
-        Check if the current session should end.
+        Check if the current session should end and log to file.
+        :param log_file: File object for logging.
         :return: True if the session should end, False otherwise.
         """
         if datetime.now() >= self.session_end:
+            log_file.write(f"Session ended at: {datetime.now()}\n")
             return True
         return False
 
@@ -41,22 +51,67 @@ class SessionTracker:
         remaining_time = self.session_end - datetime.now()
         return max(remaining_time.total_seconds(), 0)
 
+    # New Method: is_within_allowed_time
+    def is_within_allowed_time(self, current_time):
+        """
+        Check if the current time is within the allowed session time.
+        :param current_time: datetime object of the current time.
+        :return: True if within allowed time, False otherwise.
+        """
+        day_type = "weekend_holiday" if current_time.weekday() >= 5 else "weekday"
+        start_time = self.config["day"][day_type]["cutoff_timings"]["start"]
+        end_time = self.config["day"][day_type]["cutoff_timings"]["end"]
+
+        return start_time <= current_time.time() <= end_time
+    
+    # New Method: calculate_next_start_time
+    def calculate_next_start_time(self, current_time):
+        """
+        Calculate the next valid start time for a session.
+        :param current_time: datetime object of the current time.
+        :return: datetime object of the next start time.
+        """
+        day_type = "weekend_holiday" if current_time.weekday() >= 5 else "weekday"
+        next_start_date = current_time.date()
+        next_start_time = self.config["day"][day_type]["cutoff_timings"]["start"]
+
+        if current_time.time() > next_start_time:
+            next_start_date += timedelta(days=1)  # Move to the next day
+
+        return datetime.combine(next_start_date, next_start_time)
+    
+    # New Method: notify_next_start_time
+    def notify_next_start_time(self, next_start_time):
+        """
+        Notify the user of the next valid start time for a session.
+        :param next_start_time: datetime object of the next start time.
+        """
+        print(f"Session cannot start now. Next available start time: {next_start_time}")
+
 # Example usage
 if __name__ == "__main__":
-    # For testing, you can set a manual start time. E.g.: datetime(year=2023, month=12, day=23, hour=15, minute=0)
-    test_time = datetime(year=2023, month=12, day=22, hour=7, minute=30, second=0)  # Set to "None" to use the current system time
-
-    config = load_config('laptop-schedule.json')  # Load the configuration
+    config = load_config('laptop-schedule.json')
     tracker = SessionTracker(config)
-    tracker.start_session(test_start_time=test_time)
-    print(f"Session started at: {tracker.session_start}")
-    print(f"Session will end at: {tracker.session_end}")
+    session_started = tracker.start_session()
 
-    # Example to check remaining time in a loop
-    while True:
-        time.sleep(1)  # Sleep for 1 second to avoid excessive CPU usage
-        if tracker.check_session_end():
-            print("Session time is up!")
-            break
+    # Determine path for the log file
+    home_dir = os.path.expanduser('~')
+    log_file_path = os.path.join(home_dir, 'laptop-tracker.log')
+
+    with open(log_file_path, 'a') as log_file:
+        if session_started:
+            log_file.write(f"Session started at: {tracker.session_start}\n")
+            print(f"Session started at: {tracker.session_start}")
+            print(f"Session will end at: {tracker.session_end}")
+
+            while True:
+                time.sleep(1)
+                if tracker.check_session_end(log_file):
+                    print("Session time is up!")
+                    break
+                else:
+                    remaining_seconds = tracker.get_remaining_time()
+                    print(f"Time remaining: {remaining_seconds} seconds")
         else:
-            print(f"Time remaining: {tracker.get_remaining_time()} seconds")
+            print("Session start time is not yet reached.")
+            
