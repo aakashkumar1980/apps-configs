@@ -9,6 +9,7 @@ class SessionTracker:
         self.config = config
         self.session_start = None
         self.session_end = None
+        self.system = config.get('system', 'unknown')  # Added system attribute
 
     def start_session(self):
         """
@@ -86,7 +87,20 @@ class SessionTracker:
         Notify the user of the next valid start time for a session.
         :param next_start_time: datetime object of the next start time.
         """
-        print(f"Session cannot start now. Next available start time: {next_start_time}")
+        message = f"Session cannot start now. Next available start time: {next_start_time}"
+        if self.system == 'ubuntu':
+            self.display_ubuntu_notification(message)
+        elif self.system == 'windows':
+            self.display_windows_notification(message)
+        else:
+            print(message)  # Default action
+    def display_ubuntu_notification(self, message):
+        # Implement Ubuntu-specific notification logic here
+        os.system(f'notify-send "Laptop Usage Control" "{message}"')
+    def display_windows_notification(self, message):
+        # TODO: Implement Windows-specific notification logic here
+        pass  # Placeholder for Windows notification implementation
+
 
 # Example usage
 if __name__ == "__main__":
@@ -94,9 +108,15 @@ if __name__ == "__main__":
     tracker = SessionTracker(config)
     session_started = tracker.start_session()
 
-    # Determine path for the log file
-    home_dir = os.path.expanduser('~')
-    log_file_path = os.path.join(home_dir, 'laptop-tracker.log')
+    # Determine path for the log file based on the OS
+    if tracker.system == 'ubuntu':
+        log_file_path = '/home/ubuntu/Documents/laptop-tracker.log'
+    elif tracker.system == 'windows':
+        # TODO: Update the path to the log file
+        log_file_path = r'C:\Windows\System32\laptop-tracker.log'
+    else:
+        home_dir = os.path.expanduser('~')
+        log_file_path = os.path.join(home_dir, 'laptop-tracker.log')    
 
     with open(log_file_path, 'a') as log_file:
         if session_started:
@@ -114,4 +134,3 @@ if __name__ == "__main__":
                     print(f"Time remaining: {remaining_seconds} seconds")
         else:
             print("Session start time is not yet reached.")
-            

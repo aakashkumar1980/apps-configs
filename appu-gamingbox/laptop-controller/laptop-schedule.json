@@ -1,4 +1,5 @@
 {
+  "system": "ubuntu",
   "session" :{
     "max_duration": "0.67",
     "break": "0.17"
