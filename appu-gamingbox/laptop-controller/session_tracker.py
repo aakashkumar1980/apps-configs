@@ -6,24 +6,30 @@ from config_loader import load_config  # Importing the load_config function
 
 class SessionTracker:
     def __init__(self, config):
-        self.config = config
-        self.session_start = None
-        self.session_end = None
-        self.system = config.get('system', 'unknown')  # Added system attribute
+      self.config = config
+      self.system = config.get('system', 'unknown')
+      self.total_usage_today = timedelta()  # Track total usage for the current day
+      self.last_session_end = None  # Track when the last session ended
 
-    def start_session(self):
-        """
-        Start a new session based on the current system time.
-        """
-        now = datetime.now()
-        print(f"Current time: {now}")
-        if not self.is_within_allowed_time(now):
-            next_start_time = self.calculate_next_start_time(now)
-            self.notify_next_start_time(next_start_time)
-            return False
-        self.session_start = now
-        self.calculate_session_end()
+    def start_session(self, current_time):
+      # New logic for starting a session based on current_time
+      if self.is_within_allowed_time(current_time):
+        # Check if the current time is after the last session end + break time
+        break_duration = timedelta(hours=float(self.config["session"]["break"]))
+        if self.last_session_end and current_time < self.last_session_end + break_duration:
+            return False  # Still in break time
+
+        # Check daily usage limit
+        day_type = "weekend_holiday" if current_time.weekday() >= 5 else "weekday"
+        max_daily_duration = timedelta(hours=float(self.config["day"][day_type]["max_duration"]))
+        if self.total_usage_today >= max_daily_duration:
+            return False  # Daily limit reached
+
+        self.session_start = current_time
+        max_duration_hours = float(self.config["session"]["max_duration"])
+        self.session_end = self.session_start + timedelta(hours=max_duration_hours)
         return True
+      return False
 
     def calculate_session_end(self):
         """
@@ -106,7 +112,6 @@ class SessionTracker:
 if __name__ == "__main__":
     config = load_config('laptop-schedule.json')
     tracker = SessionTracker(config)
-    session_started = tracker.start_session()
 
     # Determine path for the log file based on the OS
     if tracker.system == 'ubuntu':
@@ -119,18 +124,25 @@ if __name__ == "__main__":
         log_file_path = os.path.join(home_dir, 'laptop-tracker.log')    
 
     with open(log_file_path, 'a') as log_file:
-        if session_started:
-            log_file.write(f"Session started at: {tracker.session_start}\n")
-            print(f"Session started at: {tracker.session_start}")
-            print(f"Session will end at: {tracker.session_end}")
+      while True:
+        current_time = datetime.now()
+        if tracker.start_session(current_time):
+          log_file.write(f"Session started at: {tracker.session_start}\n")
+          while current_time < tracker.session_end:
+            time.sleep(1)
+            current_time = datetime.now()
+            # Additional code for logging and notifying
 
-            while True:
-                time.sleep(1)
-                if tracker.check_session_end(log_file):
-                    print("Session time is up!")
-                    break
-                else:
-                    remaining_seconds = tracker.get_remaining_time()
-                    print(f"Time remaining: {remaining_seconds} seconds")
+          tracker.total_usage_today += (tracker.session_end - tracker.session_start)
+          tracker.last_session_end = tracker.session_end
+          log_file.write(f"Session ended at: {tracker.session_end}\n")
+          print("Session ended. Taking a break.")
         else:
-            print("Session start time is not yet reached.")
+          # Wait for some time before rechecking
+          time.sleep(10)
+          # time.sleep(60)  # Check every minute
+
+        # Reset usage tracking at the end of the day
+        if current_time.date() != tracker.session_start.date():
+          tracker.total_usage_today = timedelta()
+
