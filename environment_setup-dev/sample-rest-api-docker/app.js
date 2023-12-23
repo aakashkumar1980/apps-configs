@@ -41,7 +41,7 @@ const server = http.createServer(async (req, res) => {
 
     // GET all todos
     else if (req.url === '/api/todos' && req.method === 'GET') {
-        const todos = db.get('todos').value();
+        const todos = db.get('todos').sortBy('description').value();
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(todos));
     }
