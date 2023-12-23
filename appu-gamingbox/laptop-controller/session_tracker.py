@@ -143,6 +143,7 @@ if __name__ == "__main__":
                 
             else:
                 time.sleep(10)  # 10 seconds sleep
-
-            if current_time.date() != tracker.session_start.date():
-                tracker.total_usage_today = timedelta()
+  
+            if hasattr(tracker, 'session_start'):
+              if current_time.date() != tracker.session_start.date():
+                  tracker.total_usage_today = timedelta()
