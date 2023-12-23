@@ -48,6 +48,13 @@ class SessionTracker:
             self.wait_until(next_start_time)
             self.session_start = next_start_time
         else:
+            # Check if the required break time has passed since the last session ended
+            if self.last_session_end:
+                break_duration = timedelta(hours=float(self.config["session"]["break"]))
+                if now < self.last_session_end + break_duration:
+                    print("Break time has not elapsed yet.")  # Debugging
+                    return False  # Break time not yet elapsed
+
             self.session_start = now
 
         self.calculate_session_end()
