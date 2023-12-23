@@ -7,6 +7,14 @@ async function apiRoutes(fastify, options) {
   });
 
 
+  /**
+   * @description Employees with max salary by position are computed using stream.
+   * 
+   * @note This uses stream to process the large dataset for optimized performance.
+   * However, it is not suitable for every use case and specially those that require partitioning, grouping kind of operations.
+   * The reason is that stream is not suitable for such operations and it is better to use MongoDB native aggregation pipelines.
+   * In this example it fits to guage the performance of NodeJS application.
+   */
   fastify.get('/api/employee/position/regular', async (request, reply) => {
     const db = database.getDb();
   
@@ -16,7 +24,7 @@ async function apiRoutes(fastify, options) {
   
     try {
       // Stream hired-records and build a map
-      const hiredStream = db.collection('hired-records').find().stream();
+      const hiredStream = db.collection('hire').find().stream();
       for await (const record of hiredStream) {
         if (!hiredMap[record.name] || hiredMap[record.name] > record.hired) {
           hiredMap[record.name] = record.hired;
@@ -24,7 +32,7 @@ async function apiRoutes(fastify, options) {
       }
   
       // Stream employee-records and process data
-      const employeeStream = db.collection('employee-records').find().stream();
+      const employeeStream = db.collection('employees').find().stream();
       for await (const record of employeeStream) {
         const { name, position, salary } = record;
         if (!maxSalaryByPosition[position] || maxSalaryByPosition[position].salary < salary) {
@@ -45,17 +53,22 @@ async function apiRoutes(fastify, options) {
     return resultArray;
   });
   
+
+  /**
+   * @Unfit for development
+   * @description This requires a lot of MongoDB cpu/memory and is not suitable for development.
+   *
   fastify.get('/api/employee/position/optimized', async (request, reply) => {
     const db = database.getDb();
   
     let result;
     try {
-      result = await db.collection('employee-records').aggregate([
+      result = await db.collection('employees').aggregate([
         { $sort: { salary: -1 } },
         { $group: { _id: "$position", maxSalaryEmployee: { $first: "$$ROOT" } } },
         {
           $lookup: {
-            from: "hired-records",
+            from: "hire",
             let: { employeeName: "$maxSalaryEmployee.name" },
             pipeline: [
               { $match: { $expr: { $eq: ["$name", "$$employeeName"] } } },
@@ -83,8 +96,7 @@ async function apiRoutes(fastify, options) {
   
     return result;
   });
-  
-  
+  **/
 
 }
 
