@@ -29,12 +29,14 @@ class SessionTracker:
         self.session_end = self.session_start + timedelta(hours=max_duration_hours)
 
     def check_and_end_session(self, current_time, log_file):
+        print(f"Checking if session should end: Current Time - {current_time}, Session End - {self.session_end}")  # Logging current check
         if current_time >= self.session_end:
             self.last_session_end = current_time
             self.write_last_session_end()
             log_file.write(f"Session ended at: {self.last_session_end}\n")
-            break_time = int(float(self.config["session"]["break"])*60)
-            self.display_notification(f" Session ended. Taking a break.\r\nYou can start a new session after: {break_time} minutes.")
+            print(f"Session ended at: {self.last_session_end}")  # Logging session end
+            break_time = int(float(self.config["session"]["break"]) * 60)
+            self.display_notification(f"Session ended. Taking a break.\r\nYou can start a new session after: {break_time} minutes.")
             return True
         return False
                 
@@ -68,6 +70,7 @@ class SessionTracker:
         return start_time <= current_time.time() <= end_time
 
     def calculate_next_start_time(self, current_time):
+        print(f"Calculating next start time from: {current_time}")  # Logging next start time calculation
         day_type = "weekend_holiday" if current_time.weekday() >= 5 else "weekday"
         next_start_date = current_time.date()
         next_start_time = self.config["day"][day_type]["cutoff_timings"]["start"]
@@ -147,3 +150,5 @@ if __name__ == "__main__":
             if hasattr(tracker, 'session_start'):
               if current_time.date() != tracker.session_start.date():
                   tracker.total_usage_today = timedelta()
+                  print("Resetting total usage for the new day")  # Logging reset of daily usage
+
