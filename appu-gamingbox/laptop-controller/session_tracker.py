@@ -33,7 +33,8 @@ class SessionTracker:
             self.last_session_end = current_time
             self.write_last_session_end()
             log_file.write(f"Session ended at: {self.last_session_end}\n")
-            print("Session ended. Taking a break.")
+            break_time = int(float(self.config["session"]["break"])*60)
+            self.display_notification(f" Session ended. Taking a break.\r\nYou can start a new session after: {break_time} minutes.")
             return True
         return False
                 
@@ -41,22 +42,21 @@ class SessionTracker:
     def start_session(self, current_time):
         now = current_time
         print(f"Attempting to start session at: {now}")  # Debugging statement
-        if not self.is_within_allowed_time(now):
-            print("Current time is not within allowed session time.")  # Debugging
+        if not self.is_within_allowed_time(now): 
             next_start_time = self.calculate_next_start_time(now)
-            print(f"Next session start time: {next_start_time}")  # Debugging
+            self.notify_next_start_time(next_start_time)
             self.wait_until(next_start_time)
             self.session_start = next_start_time
+            return False  # Session not started
         else:
             # Check if the required break time has passed since the last session ended
             if self.last_session_end:
                 break_duration = timedelta(hours=float(self.config["session"]["break"]))
                 if now < self.last_session_end + break_duration:
-                    print("Break time has not elapsed yet.")  # Debugging
+                    self.display_notification("Break time has not elapsed yet.")
                     return False  # Break time not yet elapsed
 
             self.session_start = now
-
         self.calculate_session_end()
         return True
 
@@ -85,17 +85,19 @@ class SessionTracker:
 
     ## UTILS ##
     def notify_next_start_time(self, next_start_time):
-        message = f"Session cannot start now. Next available start time: {next_start_time}"
+        message = f" Session cannot start now.\r\nNext available start time: {next_start_time}"
+        self.display_notification(message)
+
+    def display_notification(self, message):
         if self.system == 'ubuntu':
             self.display_ubuntu_notification(message)
         elif self.system == 'windows':
             self.display_windows_notification(message)
         else:
-            print(message)  # Default action
-
+            print(message)  # Default action        
     def display_ubuntu_notification(self, message):
         os.system(f'notify-send "Laptop Usage Control" "{message}"')
-
+        # TODO: Add system shutdown command
     def display_windows_notification(self, message):
         pass  # Placeholder for Windows notification implementation
 
@@ -120,9 +122,9 @@ def get_file_path(config, file_type):
     return log_file_path if file_type == "log" else last_session_end_file_path
 
 
-# Example usage
+# MAIN COMMAND
 if __name__ == "__main__":
-    config = load_config('laptop-schedule.json')
+    config = load_config('/home/ubuntu/Desktop/apps-configs/appu-gamingbox/laptop-controller/laptop-schedule.json')
     
     tracker = SessionTracker(config, get_file_path(config, 'last_session_end'))
     with open(get_file_path(config, 'log'), 'a') as log_file:
