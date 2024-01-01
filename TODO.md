@@ -14,4 +14,4 @@
 <br/>
 
 # GROUP 2
-- AWS Certified Solutions Architect Professional
+- Certifications
