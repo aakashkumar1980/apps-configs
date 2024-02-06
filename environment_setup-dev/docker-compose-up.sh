@@ -6,7 +6,7 @@ docker-compose up -d
 # Give containers some time to fully start
 sleep 30
 
-
+echo "\n\nCouchbase Cluster Server is installing..."
 # ################# #
 # COUCHBASE CLUSTER #
 # ################# #
@@ -31,7 +31,7 @@ echo "Add node2 and node3 to the cluster manually as getting SSL error on automa
 echo "Rebalance the cluster manually..."
 
 
-
+echo "\n\nVault Server is installing..."
 # ##### #
 # VALUT #
 # ##### #
@@ -122,7 +122,7 @@ vault kv put secret/springboot_template/cognito \
     spring.security.oauth2.resourceserver.jwt.audience=albums-identifier
 
 
-
+echo "\n\nSample REST API is installing..."
 # ############### #
 # SAMPLE REST API #
 # ############### #
