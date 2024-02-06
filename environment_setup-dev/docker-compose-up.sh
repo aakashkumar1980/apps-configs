@@ -22,14 +22,6 @@ docker-compose exec couchbase-node1 couchbase-cli cluster-init \
   --cluster-fts-ramsize 256 \
   --cluster-analytics-ramsize 1024 \
   --index-storage-setting default  
-  
-
-# add the remaining nodes to the cluster 
-echo "Add node2 and node3 to the cluster manually as getting SSL error on automation..."
-
-# rebalance the cluster to distribute data and services across nodes
-echo "Rebalance the cluster manually..."
-
 
 echo "\n\nVault Server is installing..."
 # ##### #

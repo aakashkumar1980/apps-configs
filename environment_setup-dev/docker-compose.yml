@@ -17,27 +17,27 @@ services:
         aliases:
           - couchbase-node1.localdomain
 
-  couchbase-node2:
-    image: couchbase:enterprise
-    environment:
-      - TYPE=WORKER
-    volumes:
-      - ./couchbase-data/node2:/opt/couchbase/var
-    networks:
-      couchbase-cluster:
-        aliases:
-          - couchbase-node2.localdomain
+  #couchbase-node2:
+  #  image: couchbase:enterprise
+  #  environment:
+  #    - TYPE=WORKER
+  #  volumes:
+  #    - ./couchbase-data/node2:/opt/couchbase/var
+  #  networks:
+  #    couchbase-cluster:
+  #      aliases:
+  #        - couchbase-node2.localdomain
 
-  couchbase-node3:
-    image: couchbase:enterprise
-    environment:
-      - TYPE=WORKER
-    volumes:
-      - ./couchbase-data/node3:/opt/couchbase/var
-    networks:
-      couchbase-cluster:
-        aliases:
-          - couchbase-node3.localdomain    
+  #couchbase-node3:
+  #  image: couchbase:enterprise
+  #  environment:
+  #    - TYPE=WORKER
+  #  volumes:
+  #    - ./couchbase-data/node3:/opt/couchbase/var
+  #  networks:
+  #    couchbase-cluster:
+  #      aliases:
+  #        - couchbase-node3.localdomain    
 
 
   # ##### #
