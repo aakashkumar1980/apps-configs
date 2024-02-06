@@ -1,5 +1,43 @@
 version: '3'
 services:
+  couchbase-node1:
+    image: couchbase:enterprise
+    environment:
+      - TYPE=PRIMARY
+    ports:
+      - "8091-8094:8091-8094"
+      - "11210:11210"
+    volumes:
+      - ./couchbase-data/node1:/opt/couchbase/var
+    networks:
+      couchbase-cluster:
+        aliases:
+          - couchbase-node1.localdomain
+
+  couchbase-node2:
+    image: couchbase:enterprise
+    environment:
+      - TYPE=WORKER
+    volumes:
+      - ./couchbase-data/node2:/opt/couchbase/var
+    networks:
+      couchbase-cluster:
+        aliases:
+          - couchbase-node2.localdomain
+
+  couchbase-node3:
+    image: couchbase:enterprise
+    environment:
+      - TYPE=WORKER
+    volumes:
+      - ./couchbase-data/node3:/opt/couchbase/var
+    networks:
+      couchbase-cluster:
+        aliases:
+          - couchbase-node3.localdomain    
+
+
+
   mysql:
     image: mysql:latest
     environment:
@@ -14,6 +52,8 @@ services:
     networks:
       - docker-network
 
+
+
   vault:
     image: vault:1.13.3
     environment:
@@ -27,9 +67,12 @@ services:
       - docker-network
 
 volumes:
+  couchbase-data:
   mysql-data:
   vault-data:
 
 networks:
+  couchbase-cluster:
+    driver: bridge
   docker-network:
     driver: bridge

@@ -7,6 +7,31 @@ docker-compose up -d
 sleep 30
 
 
+# ################# #
+# COUCHBASE CLUSTER #
+# ################# #
+# initialize the primary node and set up the cluster
+docker-compose exec couchbase-node1 couchbase-cli cluster-init \
+  --cluster-name couchbase-cluster \
+  --cluster-username admin \
+  --cluster-password 'p@ssword' \
+  --services data,index,query,fts,analytics,eventing \
+  --cluster-ramsize 1024 \
+  --cluster-index-ramsize 512 \
+  --cluster-eventing-ramsize 256 \
+  --cluster-fts-ramsize 256 \
+  --cluster-analytics-ramsize 1024 \
+  --index-storage-setting default  
+  
+
+# add the remaining nodes to the cluster 
+echo "Add node2 and node3 to the cluster manually as getting SSL error on automation..."
+
+# rebalance the cluster to distribute data and services across nodes
+echo "Rebalance the cluster manually..."
+
+
+
 # ##### #
 # VALUT #
 # ##### #
