@@ -1,5 +1,8 @@
 version: '3'
 services:
+  # ################# #
+  # Couchbase cluster #
+  # ################# #
   couchbase-node1:
     image: couchbase:enterprise
     environment:
@@ -37,7 +40,9 @@ services:
           - couchbase-node3.localdomain    
 
 
-
+  # ##### #
+  # MYSQL #
+  # ##### #
   mysql:
     image: mysql:latest
     environment:
@@ -53,7 +58,9 @@ services:
       - docker-network
 
 
-
+  # ##### #
+  # VAULT #
+  # ##### #
   vault:
     image: vault:1.13.3
     environment:
@@ -65,6 +72,8 @@ services:
       - ./vault-data:/vault/file
     networks:
       - docker-network
+
+
 
 volumes:
   couchbase-data:
