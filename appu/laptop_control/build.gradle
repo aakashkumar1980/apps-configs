@@ -26,6 +26,10 @@ dependencies {
   implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
   implementation 'com.amazonaws:aws-java-sdk-s3:1.11.1034'
 
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
