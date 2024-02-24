@@ -1,7 +1,0 @@
-https://s3.console.aws.amazon.com/s3/buckets/appugamingbox-controltower?region=us-west-1&tab=properties
-https://us-east-1.console.aws.amazon.com/iam/home?region=us-west-1#/roles
-https://us-west-1.console.aws.amazon.com/lambda/home?region=us-west-1#/functions
-https://us-west-1.console.aws.amazon.com/lambda/home?region=us-west-1#/functions/appugamingbox-controltower-uptime-lambda-stopec2?tab=monitoring
-https://us-west-1.console.aws.amazon.com/systems-manager/parameters/?region=us-west-1&tab=Table
-https://us-west-1.console.aws.amazon.com/scheduler/home?region=us-west-1#schedules
-
