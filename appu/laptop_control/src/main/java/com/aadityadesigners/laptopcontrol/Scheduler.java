@@ -49,28 +49,41 @@ public class Scheduler {
     }
   }
 
+  /**
+   * @RUN every 5 minutes
+   * @param time
+   * @param localTime
+   * @param startTime
+   * @param endTime
+   * @param totalTimeLimitHour
+   */
   private void process(
       ZonedDateTime time, LocalTime localTime, LocalTime startTime, LocalTime endTime,
       Integer totalTimeLimitHour) {
 
+    String key = time.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy"));
+    Double laptopUsageTimeInMins = Double.valueOf(s3Service.getValue(key, BUCKET_NAME, LAPTOPCONTROL_PROPERTIES));
     if (localTime.isAfter(startTime)) {
       // time ended
-      if (localTime.isAfter(endTime))
+      if (localTime.isAfter(endTime)) {
         utils.printLogInTomorrowMessage();
+        return;
+      }
 
-      String key = time.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy"));
-      Double laptopUsageTimeInMins = Double.valueOf(s3Service.getValue(key, BUCKET_NAME, LAPTOPCONTROL_PROPERTIES));
-      if (laptopUsageTimeInMins == null) {
-        initiateUsageTracking(key);
+      /** START PROCESS */
+      if (laptopUsageTimeInMins != null) {
+        // limit reached
+        if (laptopUsageTimeInMins > (totalTimeLimitHour * 60.0)) {
+          updateUsageTracking(key, String.format("%.2f", laptopUsageTimeInMins / 60.0));
+          utils.printLogInTomorrowMessage();
+          return;
+        }
+
+        // update usage time
+        updateUsageTracking(key, String.format("%.2f", (laptopUsageTimeInMins + 5) / 60.0));
 
       } else {
-
-        if (laptopUsageTimeInMins > (totalTimeLimitHour * 60.0)) {
-          utils.printLogInTomorrowMessage();
-          updateUsageTracking(key, String.format("%.2f", laptopUsageTimeInMins / 60.0));
-        } else {
-
-        }
+        initiateUsageTracking(key);
       }
 
     } else {
