@@ -35,18 +35,14 @@ public class Scheduler {
 
     /** MAIN LOGIC */
     LocalTime localTime = time.toLocalTime();
-    if (utils.isWeekday(time)) {
-      LocalTime startTime = controlTimingsProperties.getWeekdays().getTimings().getStart();
-      LocalTime endTime = controlTimingsProperties.getWeekdays().getTimings().getEnd();
-      Integer totalTimeLimitHour = controlTimingsProperties.getWeekdays().getTotalTimeLimitHr();
-      process(time, localTime, startTime, endTime, totalTimeLimitHour);
-
-    } else if (utils.isWeekend(time)) {
-      LocalTime startTime = controlTimingsProperties.getWeekendsHolidays().getTimings().getStart();
-      LocalTime endTime = controlTimingsProperties.getWeekendsHolidays().getTimings().getEnd();
-      Integer totalTimeLimitHour = controlTimingsProperties.getWeekendsHolidays().getTotalTimeLimitHr();
-      process(time, localTime, startTime, endTime, totalTimeLimitHour);
-    }
+    process(
+        time, localTime,
+        utils.isWeekday(time) ? controlTimingsProperties.getWeekdays().getTimings().getStart()
+            : controlTimingsProperties.getWeekendsHolidays().getTimings().getStart(),
+        utils.isWeekday(time) ? controlTimingsProperties.getWeekdays().getTimings().getEnd()
+            : controlTimingsProperties.getWeekendsHolidays().getTimings().getEnd(),
+        utils.isWeekday(time) ? controlTimingsProperties.getWeekdays().getTotalTimeLimitHr()
+            : controlTimingsProperties.getWeekendsHolidays().getTotalTimeLimitHr());
   }
 
   /**
@@ -58,7 +54,8 @@ public class Scheduler {
    * @param totalTimeLimitHour
    */
   private void process(
-      ZonedDateTime time, LocalTime localTime, LocalTime startTime, LocalTime endTime,
+      ZonedDateTime time, LocalTime localTime,
+      LocalTime startTime, LocalTime endTime,
       Integer totalTimeLimitHour) {
 
     String key = time.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy"));
@@ -79,7 +76,7 @@ public class Scheduler {
           return;
         }
 
-        // update usage time
+        /** update usage time **/
         updateUsageTracking(key, String.format("%.2f", (laptopUsageTimeInMins + 5) / 60.0));
 
       } else {
