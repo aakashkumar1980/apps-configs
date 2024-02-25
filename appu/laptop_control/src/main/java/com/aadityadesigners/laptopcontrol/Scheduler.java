@@ -28,7 +28,6 @@ public class Scheduler {
   private static final String LAPTOPCONTROL_PROPERTIES = "laptopcontrol.properties";
 
   public void schedule() {
-
     ZonedDateTime time = ZonedDateTime.now(ZoneId.of(ZONE_ID));
     String formattedDateTime = time.format(DateTimeFormatter.ofPattern("hh:mm (a) - dd/MMM/yyyy"));
     System.out.println(String.format("Current Time: %s, isWeekday: %s, isWeekend: %s", formattedDateTime,
@@ -37,34 +36,45 @@ public class Scheduler {
     /** MAIN LOGIC */
     LocalTime localTime = time.toLocalTime();
     if (utils.isWeekday(time)) {
+      LocalTime startTime = controlTimingsProperties.getWeekdays().getTimings().getStart();
+      LocalTime endTime = controlTimingsProperties.getWeekdays().getTimings().getEnd();
+      Integer totalTimeLimitHour = controlTimingsProperties.getWeekdays().getTotalTimeLimitHr();
+      process(time, localTime, startTime, endTime, totalTimeLimitHour);
 
     } else if (utils.isWeekend(time)) {
       LocalTime startTime = controlTimingsProperties.getWeekendsHolidays().getTimings().getStart();
       LocalTime endTime = controlTimingsProperties.getWeekendsHolidays().getTimings().getEnd();
-      if (localTime.isAfter(startTime)) {
-        // check if its time to stop working
-        if (localTime.isAfter(endTime))
-          utils.printLogInTomorrowMessage();
+      Integer totalTimeLimitHour = controlTimingsProperties.getWeekendsHolidays().getTotalTimeLimitHr();
+      process(time, localTime, startTime, endTime, totalTimeLimitHour);
+    }
+  }
 
-        String key = time.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy"));
-        Double laptopUsageTimeInMins = Double.valueOf(s3Service.getValue(key, BUCKET_NAME, LAPTOPCONTROL_PROPERTIES));
-        if (laptopUsageTimeInMins == null) {
-          initiateUsageTracking(key);
+  private void process(
+      ZonedDateTime time, LocalTime localTime, LocalTime startTime, LocalTime endTime,
+      Integer totalTimeLimitHour) {
 
-        } else {
+    if (localTime.isAfter(startTime)) {
+      // time ended
+      if (localTime.isAfter(endTime))
+        utils.printLogInTomorrowMessage();
 
-          Integer totalTimeLimitHour = controlTimingsProperties.getWeekendsHolidays().getTotalTimeLimitHr();
-          if (laptopUsageTimeInMins > (totalTimeLimitHour * 60.0)) {
-            utils.printLogInTomorrowMessage();
-            updateUsageTracking(key, String.format("%.2f", laptopUsageTimeInMins / 60.0));
-          } else {
-
-          }
-        }
+      String key = time.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy"));
+      Double laptopUsageTimeInMins = Double.valueOf(s3Service.getValue(key, BUCKET_NAME, LAPTOPCONTROL_PROPERTIES));
+      if (laptopUsageTimeInMins == null) {
+        initiateUsageTracking(key);
 
       } else {
-        utils.printWaitMessage(startTime, localTime);
+
+        if (laptopUsageTimeInMins > (totalTimeLimitHour * 60.0)) {
+          utils.printLogInTomorrowMessage();
+          updateUsageTracking(key, String.format("%.2f", laptopUsageTimeInMins / 60.0));
+        } else {
+
+        }
       }
+
+    } else {
+      utils.printWaitMessage(startTime, localTime);
     }
   }
 
