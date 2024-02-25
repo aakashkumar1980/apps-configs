@@ -18,8 +18,18 @@ public class Utils {
     return !isWeekend(dateTime);
   }
 
-  public void printMessage(String message, LocalTime time1, LocalTime time2) {
+  public void printWaitMessage(LocalTime time1, LocalTime time2) {
     System.out.println(
-        String.format(message, (time1.minusHours(time2.getHour()))));
+        String.format("### Its not time yet. Please wait until %s Hours:Minutes", (time1.minusHours(time2.getHour()))));
+  }
+
+  public void printLogInTomorrowMessage() {
+    System.out.println(
+        String.format("### Its time to stop working. Please take a break and log-in tomorrow."));
+  }
+
+  public void printErrorMessage(String message) {
+    System.out.println(
+        String.format("### Error: %s", message));
   }
 }
