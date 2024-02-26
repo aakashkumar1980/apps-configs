@@ -1,7 +1,7 @@
 cloud:
   aws:
     region:
-      static: us-west-1  
+      static: 
     credentials:
       access-key: 
       secret-key: 
@@ -9,16 +9,23 @@ cloud:
 
 control-timings:
   sessions:
-    time-limit-mins: 30
+    time-limit-mins: 20
     break-time-mins: 10
+    pahers:
+      - do:
+          timings:
+            start: "09:00"
+            end: "11:59"
+      - teesra:
+          timings:
+            start: "12:00"
+            end: "14:59"
+      - chautha:
+          timings:
+            start: "15:00"
+            end: "17:59"
+      - pancham:
+          timings:
+            start: "18:00"
+            end: "20:59"            
 
-  weekdays:
-    total-time-limit-hr: 3
-    timings:
-      start: "15:30"
-      end: "21:00"
-  weekends-holidays:
-    total-time-limit-hr: 5
-    timings:
-      start: "09:00"
-      end: "21:00"
