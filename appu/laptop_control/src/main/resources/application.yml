@@ -1,7 +1,7 @@
 cloud:
   aws:
     region:
-      static: 
+      static:   
     credentials:
       access-key: 
       secret-key: 
@@ -11,6 +11,7 @@ control-timings:
   sessions:
     time-limit-mins: 20
     break-time-mins: 10
+    max-sessions-per-paher: 2
     pahers:
       - do:
           timings:
