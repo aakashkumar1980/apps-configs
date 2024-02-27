@@ -27,11 +27,11 @@ echo "\n\nVault Server is installing..."
 # ##### #
 # VALUT #
 # ##### #
+vault server -dev -dev-listen-address="0.0.0.0:9200" -dev-root-token-id="root"
 # Set Vault Address
-export VAULT_ADDR='http://localhost:9200'
-
+export VAULT_ADDR='http://0.0.0.0:9200'
 # Login to Vault
-vault login vaulttoken
+vault login root
 
 # SECRET-ENGINE:
 # Check if the secret engine is already enabled
