@@ -37,7 +37,8 @@ public class Scheduler {
     LocalTime localTime = time.toLocalTime();
     baseProcess(
         time, localTime,
-        controlTimingsProperties.getTimings().getStart(), controlTimingsProperties.getTimings().getEnd());
+        controlTimingsProperties.getTimings().getStart(),
+        controlTimingsProperties.getTimings().getEnd());
   }
 
   /**
