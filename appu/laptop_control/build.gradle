@@ -1,41 +1,41 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.2.3'
-	id 'io.spring.dependency-management' version '1.1.4'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
 }
 
 group = 'com.aadityadesigners.laptopcontrol'
 version = '0.0.1-SNAPSHOT'
-
 java {
 	sourceCompatibility = '17'
 }
-
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
 }
-
 repositories {
 	mavenCentral()
 }
-
 dependencies {
+	/** DEVELOPMENT **/
 	implementation 'org.springframework.boot:spring-boot-starter'
-  implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-  implementation 'com.amazonaws:aws-java-sdk-s3:1.11.1034'
 
-  implementation 'org.springframework.boot:spring-boot-starter-validation'
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	// aws
+	//implementation "org.springframework.cloud:spring-cloud-starter-aws:${springCloudAWSVersion}"
+	//implementation "com.amazonaws:aws-java-sdk-s3:${javaAWSVersion}"
 
-
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// lombok
 	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+
+	// development
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+
+	/** TEST **/
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-
 tasks.named('test') {
 	useJUnitPlatform()
 }

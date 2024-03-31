@@ -1,5 +1,6 @@
-package com.aadityadesigners.laptopcontrol;
+package com.aadityadesigners.laptopcontrol.bootstrap;
 
+import com.aadityadesigners.laptopcontrol.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
