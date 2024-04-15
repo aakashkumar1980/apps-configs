@@ -39,9 +39,14 @@ export GRADLE_USER_HOME="$GRADLE_HOME/_repos"
 PATH="$GRADLE_HOME/bin":$PATH
 PATH="$PATH:/home/ubuntu/.local/bin"
 ```
-<br/>
 
-### RPM Package Manager (.rpm) > Debian Package (.deb) converter | INSTALLATION
+### JetBrains Toolbox | INSTALLATION
+```sh
+Download and install this tool which is helpful to install and manage JetBrains IDEs.
+https://www.jetbrains.com/toolbox-app/
+```
+
+### RPM Package Manager (.rpm etc.) > Debian Package (.deb) converter | INSTALLATION
 ```sh
 $ sudo apt install alien -y
 
@@ -49,3 +54,17 @@ usage:
 $ alien -d <package-name>.rpm
 $ sudo dpkg -i <package-name>.deb
 ```
+
+### Terminal Command AI Tool (WrapAI) | INSTALLATION
+> Install from https://www.warp.dev/warp-ai
+>
+```sh
+Install another tool from https://www.aiterm.net/
+$ brew tap awgst/awgst
+$ brew install aiterm
+$ brew upgrade aiterm
+```
+
+<br/>
+<br/>
+<br/>

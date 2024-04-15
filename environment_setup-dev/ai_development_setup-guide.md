@@ -21,6 +21,11 @@ $ /mnt/ebs_volume/Downloads/miniconda3/bin/conda init bash
 $ /mnt/ebs_volume/Downloads/miniconda3/bin/conda init zsh
 ```
 <br/>
+
+### DataSpell IDE | INSTALLATION
+> Install DataSpell IDE from "JetBrains Toolbox"
+
+<br/>
 <br/>
 <br/>
 
