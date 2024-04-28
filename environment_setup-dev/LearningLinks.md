@@ -1,9 +1,9 @@
 # *<u>@AI Certifications</u> #
 
 ## [A.1] FOUNDATIONS
-> *<b>FOUNDATION 1</b> <br/>
+> <b>FOUNDATION 1</b> <br/>
+*[UDEMY :: Machine Learning & Data Science](https://www.udemy.com/course/complete-machine-learning-and-data-science-zero-to-mastery/?couponCode=ACCAGE0923) <br/>
 [AI Engineer RoadMap](./_learninglinks-resources/ai-engineer-roadmap_2024.pdf) <br/>
-[UDEMY :: Machine Learning & Data Science](https://www.udemy.com/course/complete-machine-learning-and-data-science-zero-to-mastery/?couponCode=ACCAGE0923)
 <br/>
 
 > FOUNDATION 2 <br/>
@@ -44,7 +44,7 @@
 <br/>
 
 ### Courses ::
-- *<b>https://www.udemy.com/course/google-cloud-professional-cloud-architect-certification/?couponCode=ST6MT42324</b>
+- https://www.udemy.com/course/google-cloud-professional-cloud-architect-certification/?couponCode=ST6MT42324
 - https://www.udemy.com/course/google-cloud-professional-architect-get-certified/?couponCode=ST6MT42324
 - https://www.udemy.com/course/gcp-architect-am/?couponCode=ST6MT42324
 - 
@@ -55,7 +55,16 @@
 ### Tests ::
 <br/>
 
-### [B.2] Certified Kubernetes Administrator (CKA)
+## [B.2] Google Cloud :: Professional Cloud Security Engineer
+<img src="https://miro.medium.com/v2/resize:fit:640/format:webp/0*2AljM5mM2m8xM-88.png" width="100px" height="100px" align="right" />
+<br/>
+
+### Courses ::
+
+### Tests ::
+<br/>
+
+### [B.3] Certified Kubernetes Administrator (CKA)
 <img src="https://th.bing.com/th/id/OIP.yNRNyHsb-fNCwU_Fvf4cqwHaHP" width="100px" height="100px" align="right"/>
 
 #### Courses ::
@@ -91,7 +100,7 @@
 # <u>@Cloud Certifications</u> #
 
 ## Pluralsight: Microservices Architect
-- https://app.pluralsight.com/paths/skill/microservices-architecture
+- *<b>https://app.pluralsight.com/paths/skill/microservices-architecture</b>
 
 ### Courses ::
 - https://app.pluralsight.com/paths/skill/microservices-architecture
