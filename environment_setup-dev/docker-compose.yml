@@ -46,7 +46,7 @@ services:
   mysql:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: apple@26j
+      MYSQL_ROOT_PASSWORD: apple26j
       MYSQL_DATABASE: privatelearningv2
       MYSQL_USER: aakash.kumar
       MYSQL_PASSWORD: apple26j

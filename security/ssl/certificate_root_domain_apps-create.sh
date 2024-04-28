@@ -1,7 +1,7 @@
 #!/bin/sh
 
 find certificates -type f -delete
-PASSPHRASE="apple@26j"
+PASSPHRASE="apple26j"
 ########################
 ### ROOT CERTIFICATE ###
 ########################

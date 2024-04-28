@@ -23,10 +23,12 @@ docker-compose exec couchbase-node1 couchbase-cli cluster-init \
   --cluster-analytics-ramsize 1024 \
   --index-storage-setting default  
 
+
+
 echo "\n\nVault Server is installing..."
-# ##### #
-# VALUT #
-# ##### #
+# ############ #
+# VALUT SERVER #
+# ############ #
 vault server -dev -dev-listen-address="0.0.0.0:9200" -dev-root-token-id="root"
 # Set Vault Address
 export VAULT_ADDR='http://0.0.0.0:9200'
@@ -81,10 +83,8 @@ path "secret/data/springboot_template/cognito" {
 # ROLE:
 # Enable AppRole
 vault auth enable approle
-
 # Create AppRole and attach Policy
 vault write auth/approle/role/privatelearningv2-role token_policies="privatelearningv2-policy"
-
 # FETCH: ROLE & SECRET
 ROLE_ID=$(vault read auth/approle/role/privatelearningv2-role/role-id)
 ROLE_ID_VALUE=$(echo $ROLE_ID | awk '/role_id/ {print $6}')
@@ -94,7 +94,6 @@ SECRET_ID_VALUE=$(echo $SECRET_ID | grep "secret_id " | awk '{print $6}')
 echo "SECRET_ID=$SECRET_ID"
 sed -i "s/^VAULT_ROLE_ID=.*/VAULT_ROLE_ID=$ROLE_ID_VALUE/" "../../oauth2-resource-server-webstorage/.env" 
 sed -i "s/^VAULT_SECRET_ID=.*/VAULT_SECRET_ID=$SECRET_ID_VALUE/" "../../oauth2-resource-server-webstorage/.env" 
-
 
 # STORE THE CREDENTIALS #
 vault kv put secret/springboot_template/common \
@@ -112,6 +111,7 @@ vault kv put secret/springboot_template/auth0_enterprise \
 vault kv put secret/springboot_template/cognito \
     spring.security.oauth2.resourceserver.jwt.issuer-uri=https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_9oQRKbQXQ \
     spring.security.oauth2.resourceserver.jwt.audience=albums-identifier
+
 
 
 echo "\n\nSample REST API is installing..."

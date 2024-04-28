@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define your passphrase and keys directory
-PASSPHRASE="apple@26j"
+PASSPHRASE="apple26j"
 KEYS_DIR="./keys"
 find $KEYS_DIR -type f -delete
 
