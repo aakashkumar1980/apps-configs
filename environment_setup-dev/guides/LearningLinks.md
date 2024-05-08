@@ -25,7 +25,6 @@
 - https://www.coursera.org/professional-certificates/preparing-for-google-cloud-machine-learning-engineer-professional-certificate
 - https://www.udemy.com/course/google-cloud-machine-learning-engineer-certification-prep/
 - https://www.udemy.com/course/machine-learning-with-google-cloud/
-- https://app.pluralsight.com/paths/certificate/preparing-for-machine-learning-with-google-cloud
 - https://www.coursera.org/professional-certificates/preparing-for-google-cloud-machine-learning-engineer-professional-certificate?action=enroll
 
 #### Tests ::
@@ -39,19 +38,24 @@
 
 
 
-## [B.1] Google Cloud :: Professional Cloud Architect
+## [B.1] Google Cloud :: Professional Cloud Architect & Microservices
 <img src="https://miro.medium.com/v2/resize:fit:1200/1*X5Hanc2IPYQ4bA38o9qmxg.png" width="100px" height="100px" align="right" />
 <br/>
 
 ### Courses ::
-- https://www.udemy.com/course/google-cloud-professional-cloud-architect-certification/?couponCode=ST6MT42324
+- *<b>https://www.udemy.com/course/google-cloud-professional-cloud-architect-certification/?couponCode=ST6MT42324</b>
+- *<b>https://lex.infosysapps.com/en/app/toc/lex_auth_0130446713200066561248/overview</b>
 - https://www.udemy.com/course/google-cloud-professional-architect-get-certified/?couponCode=ST6MT42324
+- https://www.udemy.com/course/java-microservices-cqrs-event-sourcing-with-kafka/
 - https://www.udemy.com/course/gcp-architect-am/?couponCode=ST6MT42324
+- https://www.udemy.com/course/microservices-clean-architecture-ddd-saga-outbox-kafka-kubernetes/
 - 
-- https://www.coursera.org/professional-certificates/gcp-cloud-architect
-- https://app.pluralsight.com/paths/certificate/cloud-architecture-with-google-cloud
-- https://www.pluralsight.com/cloud-guru/courses/google-certified-professional-cloud-architect
+- https://www.coursera.org/professional-certificates/gcp-cloud-architect 
+- https://www.youtube.com/watch?v=XzYfN9y0W3A (Dynatrace End to End session in 8 Hours)
 
+- (code references) 
+- https://github.com/dogaanismail/bank-solution
+- https://shopizer-ecommerce.github.io/documentation/#/starting/architecture
 ### Tests ::
 <br/>
 
@@ -70,14 +74,11 @@
 #### Courses ::
 - https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/
 - https://www.whizlabs.com/learn/course/certified-kubernetes-administrator/299/oc/
-- https://app.pluralsight.com/paths/certificate/certified-kubernetes-administrator/
 - https://www.udemy.com/course/cka-ckad-crash-course/
 - https://www.udemy.com/course/kubernetes-microservices/ (Kubernetes Hands-On - Deploy Microservices to the AWS Cloud)
 - https://lex.infosysapps.com/web/en/app/toc/lex_auth_013102937829859328878/overview/ (Kubernetes Deployment Strategies)
 -
-- https://app.pluralsight.com/library/courses/rancher-getting-started/table-of-contents
 - https://www.udemy.com/course/openshift-for-developers/
-- https://app.pluralsight.com/paths/certificate/red-hat-certified-specialist-in-openshift-administration-ex280
 
 #### Tests ::
 - https://www.udemy.com/course/certified-kubernetes-administrator-2021-cka-mock-exams/
@@ -94,30 +95,3 @@
 <br/>
 
 
-
-
-
-# <u>@Cloud Certifications</u> #
-
-## Pluralsight: Microservices Architect
-- *<b>https://app.pluralsight.com/paths/skill/microservices-architecture</b>
-
-### Courses ::
-- https://app.pluralsight.com/paths/skill/microservices-architecture
-- https://lex.infosysapps.com/en/app/toc/lex_auth_0130446713200066561248/overview
-- https://www.udemy.com/course/java-microservices-cqrs-event-sourcing-with-kafka/
-- https://www.udemy.com/course/microservices-clean-architecture-ddd-saga-outbox-kafka-kubernetes/
-- https://www.youtube.com/watch?v=XzYfN9y0W3A (Dynatrace End to End session in 8 Hours)
-- https://app.pluralsight.com/paths/skill/kubernetes-tooling-and-techniques/
-- https://app.pluralsight.com/library/courses/kubernetes-monitoring-scaling-applications/table-of-contents/
-- https://app.pluralsight.com/paths/skill/event-monitoring-and-alerting-with-prometheus/
-- https://app.pluralsight.com/library/courses/prometheus-grafana-building-dashboards-data/table-of-contents/
-
-- (code references) 
-- https://github.com/dogaanismail/bank-solution
-- https://shopizer-ecommerce.github.io/documentation/#/starting/architecture
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
